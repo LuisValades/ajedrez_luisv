@@ -56,13 +56,19 @@ export default function RootLayout({
           type="application/wasm"
           crossOrigin="anonymous"
         />
-        {/* Pre-warm cartoon piece PNGs (used by Niños/Niñas skins) */}
-        <link rel="preload" href="/pieces/peon.png" as="image" />
-        <link rel="preload" href="/pieces/torre.png" as="image" />
-        <link rel="preload" href="/pieces/caballo.png" as="image" />
-        <link rel="preload" href="/pieces/alfil.png" as="image" />
-        <link rel="preload" href="/pieces/reina.png" as="image" />
-        <link rel="preload" href="/pieces/rey.png" as="image" />
+        {/* Pre-warm one full set of cartoon PNGs so the first /jugar render
+            doesn't flicker. Loads the default Niños theme; the Niñas set
+            comes in lazily on theme switch. */}
+        {(["w", "b"] as const).flatMap((c) =>
+          (["p", "r", "n", "b", "q", "k"] as const).map((t) => (
+            <link
+              key={`${c}-${t}`}
+              rel="preload"
+              href={`/pieces/ninos/${c}/${t}.png`}
+              as="image"
+            />
+          )),
+        )}
       </head>
       <body className="min-h-full flex flex-col">
         <Providers>{children}</Providers>

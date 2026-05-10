@@ -5,7 +5,7 @@ import { Lock, Volume2, VolumeX } from "lucide-react";
 import Link from "next/link";
 import { CoachOverlay } from "@/components/coach/CoachOverlay";
 import { useCoach } from "@/components/coach/CoachContext";
-import { SkinQuickPicker } from "@/components/board/SkinQuickPicker";
+import { StylePicker } from "@/components/ui/StylePicker";
 import { PieceLegendButton } from "@/components/board/PieceLegend";
 import { HomeMenuCard } from "@/components/layout/HomeMenuCard";
 import { useSettingsStore } from "@/store/settingsStore";
@@ -103,7 +103,7 @@ export default function HomePage() {
 
         <div className="flex items-center gap-2">
           <PieceLegendButton />
-          <SkinQuickPicker />
+          <StylePicker />
           <button
             type="button"
             aria-label={voiceOn ? "Apagar voz de Drako" : "Encender voz de Drako"}

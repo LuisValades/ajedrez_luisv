@@ -18,7 +18,6 @@ import { useCoach } from "@/components/coach/CoachContext";
 import { isCheck, makeMove } from "@/lib/chessEngine";
 import { PIECE_NAMES_ES } from "@/components/board/Pieces";
 import { sfx } from "@/lib/audio/sfx";
-import { SkinBar } from "@/components/board/SkinBar";
 
 const CAPTURE_LINES = [
   "¡Órale, qué buena comida!",
@@ -313,7 +312,6 @@ export default function JugarPage() {
           iaThinking={iaThinking}
         />
         <CapturedStrip fen={fen} />
-        <SkinBar variant="full" className="mt-1" />
       </div>
 
       <div className="w-full">

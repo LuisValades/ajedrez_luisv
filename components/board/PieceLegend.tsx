@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { BookOpen, X } from "lucide-react";
 import { PieceSvg } from "./Pieces";
 import { useSettingsStore } from "@/store/settingsStore";
-import { getPieceSet } from "@/lib/pieceSets";
+import { getTheme } from "@/lib/themes";
 import type { Piece } from "@/lib/chessEngine";
 import { cn } from "@/lib/utils";
 
@@ -64,8 +64,8 @@ const LEGEND: LegendEntry[] = [
 
 export function PieceLegendButton({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
-  const activeSkin = useSettingsStore((s) => s.pieceSet);
-  const palette = getPieceSet(activeSkin).palette;
+  const themeId = useSettingsStore((s) => s.themeId);
+  const theme = getTheme(themeId);
 
   useEffect(() => {
     if (!open) return;
@@ -130,28 +130,36 @@ export function PieceLegendButton({ className }: { className?: string }) {
                     className="rounded-2xl border-2 border-[var(--color-wood-dark)]/15 bg-gradient-to-br from-white to-[var(--color-bg)] p-3 sm:p-4 shadow-[0_4px_0_0_rgba(58,36,23,0.15)]"
                   >
                     <div className="flex items-center gap-3">
-                      {/* Visual piece preview — uses active skin */}
+                      {/* Visual piece preview — uses active theme */}
                       <div
                         className="shrink-0 rounded-xl flex items-center justify-center"
                         style={{
                           width: 64,
                           height: 64,
-                          background: palette.light,
-                          border: `2px solid ${palette.innerBorder}`,
+                          background: theme.board.light,
+                          border: `2px solid ${theme.highlights.innerBorder}`,
                         }}
                       >
-                        <PieceSvg piece={{ type: entry.type, color: "w" }} size={56} />
+                        <PieceSvg
+                          piece={{ type: entry.type, color: "w" }}
+                          size={56}
+                          palette={theme.player1}
+                        />
                       </div>
                       <div
                         className="shrink-0 rounded-xl flex items-center justify-center"
                         style={{
                           width: 64,
                           height: 64,
-                          background: palette.dark,
-                          border: `2px solid ${palette.innerBorder}`,
+                          background: theme.board.dark,
+                          border: `2px solid ${theme.highlights.innerBorder}`,
                         }}
                       >
-                        <PieceSvg piece={{ type: entry.type, color: "b" }} size={56} />
+                        <PieceSvg
+                          piece={{ type: entry.type, color: "b" }}
+                          size={56}
+                          palette={theme.player2}
+                        />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-base sm:text-lg font-extrabold text-[var(--color-wood-dark)] leading-tight">

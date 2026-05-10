@@ -2,7 +2,9 @@
 
 import { Chess } from "chess.js";
 import { PieceSvg } from "@/components/board/Pieces";
-import type { Color } from "@/lib/chessEngine";
+import { useSettingsStore } from "@/store/settingsStore";
+import { getTheme } from "@/lib/themes";
+import type { Color, Piece } from "@/lib/chessEngine";
 
 const STARTING = {
   p: 8,
@@ -15,7 +17,12 @@ const STARTING = {
 
 const VALUE: Record<string, number> = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
 
+/** Group order for icons — pawns first, then minor, major, queen. */
+const TYPE_ORDER: Piece["type"][] = ["p", "n", "b", "r", "q"];
+
 export function CapturedStrip({ fen }: { fen: string }) {
+  const themeId = useSettingsStore((s) => s.themeId);
+  const theme = getTheme(themeId);
   const game = new Chess(fen);
   const board = game.board();
   const counts: Record<Color, Record<string, number>> = {
@@ -28,45 +35,58 @@ export function CapturedStrip({ fen }: { fen: string }) {
     }
   }
 
-  const captured = (color: Color) => {
-    const lost: { type: keyof typeof STARTING; n: number }[] = [];
-    (Object.keys(STARTING) as (keyof typeof STARTING)[]).forEach((t) => {
-      const lostN = STARTING[t] - counts[color][t];
-      if (lostN > 0) lost.push({ type: t, n: lostN });
+  /** Pieces this color has LOST (i.e. that the other side captured). */
+  const lostBy = (color: Color) =>
+    TYPE_ORDER.flatMap((t) => {
+      const n = STARTING[t] - counts[color][t];
+      return n > 0 ? [{ type: t, n }] : [];
     });
-    return lost;
-  };
 
   const score = (forSide: Color) => {
     const opp: Color = forSide === "w" ? "b" : "w";
-    const myLost = captured(forSide).reduce((s, x) => s + VALUE[x.type] * x.n, 0);
-    const oppLost = captured(opp).reduce((s, x) => s + VALUE[x.type] * x.n, 0);
-    return oppLost - myLost;
+    const myLostPts = lostBy(forSide).reduce((s, x) => s + VALUE[x.type] * x.n, 0);
+    const oppLostPts = lostBy(opp).reduce((s, x) => s + VALUE[x.type] * x.n, 0);
+    return oppLostPts - myLostPts;
   };
 
-  const renderCaptured = (color: Color) => {
-    const lost = captured(color);
-    const adv = score(color === "w" ? "b" : "w");
+  const renderRow = (capturerSide: Color) => {
+    // Show pieces of the OPPONENT that this side captured.
+    const oppSide: Color = capturerSide === "w" ? "b" : "w";
+    const lost = lostBy(oppSide);
+    const palette = oppSide === "w" ? theme.player1 : theme.player2;
+    const adv = score(capturerSide);
+
     if (!lost.length) {
       return (
-        <span className="text-xs text-[var(--color-wood-dark)]/40 italic">
-          sin capturas
+        <span className="text-[11px] text-[var(--color-wood-dark)]/45 italic">
+          aún no has capturado nada 👀
         </span>
       );
     }
+
     return (
-      <span className="flex items-center flex-wrap gap-0.5">
-        {lost.flatMap((l) =>
-          Array.from({ length: l.n }).map((_, i) => (
-            <span
-              key={`${l.type}-${i}`}
-              className="inline-block"
-              style={{ width: 24, height: 24 }}
-            >
-              <PieceSvg piece={{ type: l.type, color }} size={24} />
-            </span>
-          )),
-        )}
+      <span className="flex items-center flex-wrap gap-1">
+        {lost.map((entry) => (
+          <span
+            key={entry.type}
+            className="relative inline-flex items-center justify-center"
+            style={{ width: 26, height: 26 }}
+          >
+            <PieceSvg
+              piece={{ type: entry.type, color: oppSide }}
+              size={26}
+              palette={palette}
+            />
+            {entry.n > 1 && (
+              <span
+                aria-label={`${entry.n} ${entry.type}`}
+                className="absolute -bottom-1 -right-1 inline-flex h-[14px] min-w-[14px] items-center justify-center rounded-full bg-[var(--color-wood-dark)] px-[3px] text-[9px] font-bold leading-none text-white"
+              >
+                ×{entry.n}
+              </span>
+            )}
+          </span>
+        ))}
         {adv > 0 && (
           <span className="ml-1 text-xs font-bold text-[var(--color-success)]">
             +{adv}
@@ -79,16 +99,16 @@ export function CapturedStrip({ fen }: { fen: string }) {
   return (
     <div className="rounded-2xl bg-white/70 px-3 py-2 shadow-[0_3px_0_0_rgba(58,36,23,0.2)]">
       <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-wood-dark)]/50">
-            Negras
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-wood-dark)]/55 shrink-0">
+            Blancas comieron
           </span>
-          {renderCaptured("b")}
+          {renderRow("w")}
         </div>
-        <div className="flex items-center gap-2 justify-end">
-          {renderCaptured("w")}
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-wood-dark)]/50">
-            Blancas
+        <div className="flex items-center gap-2 justify-end min-w-0">
+          {renderRow("b")}
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-wood-dark)]/55 shrink-0">
+            Negras
           </span>
         </div>
       </div>

@@ -23,7 +23,7 @@ import { PieceSvg } from "./Pieces";
 import { HintArrow } from "./HintArrow";
 import { cn } from "@/lib/utils";
 import { useSettingsStore } from "@/store/settingsStore";
-import { getPieceSet } from "@/lib/pieceSets";
+import { getTheme } from "@/lib/themes";
 
 type ChessBoardProps = {
   fen?: string;
@@ -113,8 +113,26 @@ export function ChessBoard({
   onMove,
   className,
 }: ChessBoardProps) {
-  const activeSkin = useSettingsStore((s) => s.pieceSet);
-  const palette = getPieceSet(activeSkin).palette;
+  const themeId = useSettingsStore((s) => s.themeId);
+  const theme = getTheme(themeId);
+  const board_ = theme.board;
+  const hl = theme.highlights;
+  // Back-compat shape so existing references keep working.
+  const palette = {
+    light: board_.light,
+    dark: board_.dark,
+    frameStart: board_.frame,
+    frameMid: board_.frame,
+    frameEnd: board_.frame,
+    borderStart: hl.border,
+    borderEnd: hl.border,
+    lastMove: hl.lastMove,
+    selected: hl.selected,
+    hint: hl.hint,
+    capture: hl.capture,
+    threat: hl.threat,
+    innerBorder: hl.innerBorder,
+  };
   const [internalFen, setInternalFen] = useState(controlledFen ?? STARTING_FEN);
   const fen = controlledFen ?? internalFen;
   const [rawSelected, setRawSelected] = useState<Square | null>(null);
@@ -369,6 +387,22 @@ export function ChessBoard({
                           damping: 22,
                         }}
                         className="w-[88%] h-[88%] flex items-center justify-center"
+                        style={
+                          {
+                            "--piece-fill":
+                              piece.color === "w"
+                                ? theme.player1.fill
+                                : theme.player2.fill,
+                            "--piece-stroke":
+                              piece.color === "w"
+                                ? theme.player1.stroke
+                                : theme.player2.stroke,
+                            "--piece-accent":
+                              piece.color === "w"
+                                ? theme.player1.accent
+                                : theme.player2.accent,
+                          } as React.CSSProperties
+                        }
                       >
                         <PieceSvg piece={piece} size={64} />
                       </motion.div>

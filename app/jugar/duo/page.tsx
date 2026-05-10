@@ -11,6 +11,7 @@ import {
   ShieldAlert,
   Undo2,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import { AppShell } from "@/components/layout/AppShell";
 import { ChessBoard } from "@/components/board/ChessBoard";
 import { CapturedStrip } from "@/components/partida/CapturedStrip";
@@ -18,8 +19,9 @@ import { useCoach } from "@/components/coach/CoachContext";
 import { isCheck, STARTING_FEN, type Color, type MoveResult, type Square } from "@/lib/chessEngine";
 import { PIECE_NAMES_ES } from "@/components/board/Pieces";
 import { sfx } from "@/lib/audio/sfx";
-import { SkinBar } from "@/components/board/SkinBar";
 import { cn } from "@/lib/utils";
+import { useSettingsStore } from "@/store/settingsStore";
+import { getTheme } from "@/lib/themes";
 
 type HistoryEntry = {
   fen: string;
@@ -176,23 +178,16 @@ export default function DuoPage() {
   return (
     <AppShell title="Dos Jugadoras" emoji="👫" coachPosition="bottom-right">
       <div className="w-full max-w-[680px] flex flex-col gap-3">
-        {/* Status */}
-        <div className="rounded-2xl bg-white/85 px-4 py-3 shadow-[0_4px_0_0_rgba(58,36,23,0.25)] flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span aria-hidden className="text-2xl">{statusEmoji}</span>
-            <span className={cn("font-bold text-base sm:text-lg", statusColor)}>
-              {statusText}
-            </span>
-          </div>
-          <span className="text-xs sm:text-sm font-semibold text-[var(--color-wood-dark)]/70">
-            Jugadas: {moveCount}
-          </span>
-        </div>
+        {/* Turn chip — large color circle for the player on move */}
+        <TurnChip
+          turn={turn}
+          statusEmoji={statusEmoji}
+          statusText={statusText}
+          statusColor={statusColor}
+          moves={moveCount}
+        />
 
         <CapturedStrip fen={fen} />
-
-        {/* Skin chooser — always visible */}
-        <SkinBar variant="full" />
 
         {/* Toggles row — all visual aids */}
         <div className="flex flex-wrap justify-center gap-2">
@@ -284,6 +279,51 @@ export default function DuoPage() {
   );
 }
 
+function TurnChip({
+  turn,
+  statusEmoji,
+  statusText,
+  statusColor,
+  moves,
+}: {
+  turn: Color;
+  statusEmoji: string;
+  statusText: string;
+  statusColor: string;
+  moves: number;
+}) {
+  const themeId = useSettingsStore((s) => s.themeId);
+  const theme = getTheme(themeId);
+  const sidePalette = turn === "w" ? theme.player1 : theme.player2;
+  return (
+    <div className="rounded-2xl bg-white/90 px-3 py-2 shadow-[0_4px_0_0_rgba(58,36,23,0.25)] flex items-center justify-between gap-3">
+      <div className="flex items-center gap-2.5 min-w-0">
+        <motion.span
+          key={turn}
+          aria-hidden
+          initial={{ scale: 0.85 }}
+          animate={{ scale: [0.85, 1.08, 1] }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-[3px] shadow-inner"
+          style={{
+            background: sidePalette.fill,
+            borderColor: sidePalette.stroke,
+          }}
+        />
+        <div className="min-w-0">
+          <p className={cn("font-bold text-sm sm:text-base leading-tight", statusColor)}>
+            <span aria-hidden className="mr-1">{statusEmoji}</span>
+            {statusText}
+          </p>
+          <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-[var(--color-wood-dark)]/55">
+            Jugadas: {moves}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Toggle({
   label,
   emoji,
@@ -307,7 +347,7 @@ function Toggle({
         "shadow-[0_3px_0_0_rgba(58,36,23,0.35)] active:translate-y-[2px] active:shadow-[0_1px_0_0_rgba(58,36,23,0.35)]",
         active
           ? "bg-[var(--color-gold)] text-[var(--color-wood-dark)]"
-          : "bg-white/80 text-[var(--color-wood-dark)]/60",
+          : "bg-white/80 text-[var(--color-wood-dark)]/55 border border-[var(--color-wood-dark)]/10",
       )}
     >
       <span className="text-xl leading-none" aria-hidden>

@@ -150,8 +150,8 @@ export default function ConfigPage() {
             Cambia cómo se ven las piezas y los colores del tablero.
           </p>
           <PieceSetPicker
-            current={settings.pieceSet}
-            onChange={settings.setPieceSet}
+            current={settings.themeId}
+            onChange={settings.setThemeId}
           />
         </SettingsCard>
 

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowLeft, Volume2, VolumeX } from "lucide-react";
 import { CoachOverlay } from "@/components/coach/CoachOverlay";
-import { SkinQuickPicker } from "@/components/board/SkinQuickPicker";
+import { StylePicker } from "@/components/ui/StylePicker";
 import { PieceLegendButton } from "@/components/board/PieceLegend";
 import { useSettingsStore } from "@/store/settingsStore";
 import { cn } from "@/lib/utils";
@@ -32,7 +32,7 @@ export function AppShell({
   return (
     <main
       className={cn(
-        "min-h-dvh flex flex-col items-center px-3 pt-4 pb-24 sm:pt-6 gap-4",
+        "min-h-dvh flex flex-col items-center px-3 pt-3 pb-6 sm:pt-4 gap-3 sm:gap-4",
         className,
       )}
       onPointerDown={unlockAudio}
@@ -56,7 +56,7 @@ export function AppShell({
 
         <div className="flex items-center gap-2">
           <PieceLegendButton />
-          <SkinQuickPicker />
+          <StylePicker />
           <button
             type="button"
             aria-label={voiceOn ? "Apagar voz de Drako" : "Encender voz de Drako"}

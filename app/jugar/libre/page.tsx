@@ -10,7 +10,6 @@ import { useCoach } from "@/components/coach/CoachContext";
 import { isCheck } from "@/lib/chessEngine";
 import { Chess } from "chess.js";
 import { PIECE_NAMES_ES } from "@/components/board/Pieces";
-import { SkinBar } from "@/components/board/SkinBar";
 
 const CAPTURE_LINES = [
   "¡Órale, qué buena comida!",
@@ -44,7 +43,6 @@ export default function JugarPage() {
     <AppShell title="Jugar Libre" emoji="♟️" coachPosition="bottom-right">
       <div className="w-full max-w-[640px] flex flex-col gap-2">
         <StatusBar />
-        <SkinBar variant="full" />
       </div>
 
       <div className="w-full">

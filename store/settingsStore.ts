@@ -5,14 +5,14 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { speechCoach } from "@/lib/audio/speech";
 import { sfx } from "@/lib/audio/sfx";
 import type { AvatarId } from "@/lib/avatars";
-import type { PieceSetId } from "@/lib/pieceSets";
+import type { ThemeId } from "@/lib/themes";
 
 type SettingsState = {
   voiceOn: boolean;
   musicOn: boolean;
   sfxOn: boolean;
   audioUnlocked: boolean;
-  pieceSet: PieceSetId;
+  themeId: ThemeId;
   showCoordsAlways: boolean;
   showHintsAlways: boolean;
   childName: string;
@@ -21,12 +21,14 @@ type SettingsState = {
   setMusicOn: (v: boolean) => void;
   setSfxOn: (v: boolean) => void;
   unlockAudio: () => void;
-  setPieceSet: (v: PieceSetId) => void;
+  setThemeId: (v: ThemeId) => void;
   setShowCoordsAlways: (v: boolean) => void;
   setShowHintsAlways: (v: boolean) => void;
   setChildName: (v: string) => void;
   setAvatarId: (v: AvatarId) => void;
 };
+
+type LegacyV2 = { pieceSet?: "wood" | "kids" | "princess" };
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
@@ -35,7 +37,7 @@ export const useSettingsStore = create<SettingsState>()(
       musicOn: false,
       sfxOn: true,
       audioUnlocked: false,
-      pieceSet: "kids" as PieceSetId,
+      themeId: "ninos",
       showCoordsAlways: false,
       showHintsAlways: true,
       childName: "",
@@ -56,7 +58,7 @@ export const useSettingsStore = create<SettingsState>()(
         sfx.setMuted(!get().sfxOn);
         set({ audioUnlocked: true });
       },
-      setPieceSet: (v) => set({ pieceSet: v }),
+      setThemeId: (v) => set({ themeId: v }),
       setShowCoordsAlways: (v) => set({ showCoordsAlways: v }),
       setShowHintsAlways: (v) => set({ showHintsAlways: v }),
       setChildName: (v) => set({ childName: v }),
@@ -65,11 +67,20 @@ export const useSettingsStore = create<SettingsState>()(
     {
       name: "reino-settings",
       storage: createJSONStorage(() => localStorage),
-      version: 2,
+      version: 3,
       migrate: (persisted, fromVersion) => {
-        // v1 -> v2: force kids skin (cartoon redesign).
-        if (fromVersion < 2 && persisted && typeof persisted === "object") {
-          (persisted as { pieceSet?: PieceSetId }).pieceSet = "kids";
+        if (!persisted || typeof persisted !== "object") return persisted as Partial<SettingsState>;
+        // v2 -> v3: pieceSet (wood|kids|princess) -> themeId (clasico|ninos|ninas)
+        if (fromVersion < 3) {
+          const legacy = persisted as LegacyV2 & Partial<SettingsState>;
+          const map: Record<string, ThemeId> = {
+            wood: "clasico",
+            kids: "ninos",
+            princess: "ninas",
+          };
+          const nextId = legacy.pieceSet ? map[legacy.pieceSet] ?? "ninos" : "ninos";
+          legacy.themeId = nextId;
+          delete legacy.pieceSet;
         }
         return persisted as Partial<SettingsState>;
       },
@@ -77,7 +88,7 @@ export const useSettingsStore = create<SettingsState>()(
         voiceOn: s.voiceOn,
         musicOn: s.musicOn,
         sfxOn: s.sfxOn,
-        pieceSet: s.pieceSet,
+        themeId: s.themeId,
         showCoordsAlways: s.showCoordsAlways,
         showHintsAlways: s.showHintsAlways,
         childName: s.childName,
