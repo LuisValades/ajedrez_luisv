@@ -16,20 +16,24 @@ export type CartoonTheme = {
   whiteTint: string;
   /** Tint for black pieces (dark / saturated). */
   blackTint: string;
-  /** Optional extra darkening of the source for black pieces (0..1). */
+  /** Optional source brightness for white pieces (0..1, default 1). */
+  whiteDarkness?: number;
+  /** Optional source brightness for black pieces (0..1). */
   blackDarkness?: number;
 };
 
 export const KIDS_BLUE: CartoonTheme = {
-  whiteTint: "#dbeafe",
-  blackTint: "#1d4ed8",
-  blackDarkness: 0.55,
+  whiteTint: "#7dd3fc",
+  blackTint: "#1e3a8a",
+  whiteDarkness: 0.95,
+  blackDarkness: 0.5,
 };
 
 export const PRINCESS_PINK: CartoonTheme = {
-  whiteTint: "#fce7f3",
-  blackTint: "#be185d",
-  blackDarkness: 0.55,
+  whiteTint: "#fbcfe8",
+  blackTint: "#9d174d",
+  whiteDarkness: 0.95,
+  blackDarkness: 0.5,
 };
 
 type Props = {
@@ -40,11 +44,17 @@ type Props = {
 
 export function CartoonPiece({ piece, size = 64, theme }: Props) {
   const src = FILE[piece.type];
-  const tint = piece.color === "w" ? theme.whiteTint : theme.blackTint;
-  const dropShadow =
-    piece.color === "w"
-      ? "drop-shadow(0 2px 3px rgba(30,58,138,0.35))"
-      : "drop-shadow(0 2px 3px rgba(0,0,0,0.55))";
+  const isWhite = piece.color === "w";
+  const tint = isWhite ? theme.whiteTint : theme.blackTint;
+  const sourceBrightness = isWhite
+    ? (theme.whiteDarkness ?? 1)
+    : (theme.blackDarkness ?? 1);
+  const outlineColor = isWhite
+    ? "rgba(30,58,138,0.55)"
+    : "rgba(0,0,0,0.65)";
+  const dropShadow = isWhite
+    ? `drop-shadow(0 0 0.6px ${outlineColor}) drop-shadow(0 0 0.6px ${outlineColor}) drop-shadow(0 2px 3px rgba(30,58,138,0.35))`
+    : `drop-shadow(0 2px 3px rgba(0,0,0,0.55))`;
 
   return (
     <div
@@ -69,9 +79,7 @@ export function CartoonPiece({ piece, size = 64, theme }: Props) {
           width: "100%",
           height: "100%",
           objectFit: "contain",
-          ...(piece.color === "b" && theme.blackDarkness
-            ? { filter: `brightness(${theme.blackDarkness})` }
-            : {}),
+          filter: `brightness(${sourceBrightness})`,
         }}
       />
       {/* tint overlay restricted to the piece silhouette */}
@@ -88,8 +96,8 @@ export function CartoonPiece({ piece, size = 64, theme }: Props) {
           maskRepeat: "no-repeat",
           WebkitMaskPosition: "center",
           maskPosition: "center",
-          mixBlendMode: piece.color === "w" ? "multiply" : "color",
-          opacity: piece.color === "w" ? 1 : 0.85,
+          mixBlendMode: isWhite ? "multiply" : "color",
+          opacity: isWhite ? 1 : 0.9,
           pointerEvents: "none",
         }}
       />
