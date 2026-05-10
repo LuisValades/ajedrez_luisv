@@ -2,11 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Chess } from "chess.js";
-import {
-  FlipHorizontal,
-  RotateCcw,
-  Undo2,
-} from "lucide-react";
+import { Undo2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { AppShell } from "@/components/layout/AppShell";
 import { ChessBoard } from "@/components/board/ChessBoard";
@@ -18,7 +14,7 @@ import { sfx } from "@/lib/audio/sfx";
 import { cn } from "@/lib/utils";
 import { useSettingsStore } from "@/store/settingsStore";
 import { getTheme } from "@/lib/themes";
-import { OptionsSheet, OptionRow } from "@/components/ui/OptionsSheet";
+import { OptionsSheet, OptionRow, OptionAction, OptionDivider } from "@/components/ui/OptionsSheet";
 
 type HistoryEntry = {
   fen: string;
@@ -175,7 +171,7 @@ export default function DuoPage() {
   return (
     <AppShell title="Dos Jugadoras" emoji="👫" coachPosition="bottom-right">
       <div className="w-full max-w-[680px] flex flex-col gap-2">
-        {/* Compact top strip: TurnChip + Ayudas trigger inline */}
+        {/* Compact top strip: TurnChip + Deshacer + Ayudas trigger */}
         <div className="flex items-stretch gap-2">
           <div className="flex-1 min-w-0">
             <TurnChip
@@ -186,6 +182,21 @@ export default function DuoPage() {
               moves={moveCount}
             />
           </div>
+          <button
+            type="button"
+            onClick={handleUndo}
+            disabled={history.length <= 1}
+            aria-label="Deshacer última jugada"
+            className={cn(
+              "inline-flex items-center justify-center rounded-2xl px-3",
+              "bg-white/85 text-[var(--color-wood-dark)] shadow-[0_3px_0_0_rgba(58,36,23,0.25)]",
+              "active:translate-y-[1px] active:shadow-[0_1px_0_0_rgba(58,36,23,0.25)]",
+              "border border-[var(--color-wood-dark)]/10",
+              history.length <= 1 && "opacity-40 cursor-not-allowed active:translate-y-0",
+            )}
+          >
+            <Undo2 size={20} />
+          </button>
           <OptionsSheet
             label="Ayudas"
             title="Ayudas y opciones"
@@ -234,6 +245,22 @@ export default function DuoPage() {
                 if (coachOn) coach.hush();
               }}
             />
+
+            <OptionDivider label="Acciones" />
+
+            <OptionAction
+              label="Voltear ahora"
+              description="Gira el tablero una vez"
+              emoji="🔄"
+              onClick={() => setOrientation((o) => (o === "w" ? "b" : "w"))}
+            />
+            <OptionAction
+              label="Reiniciar partida"
+              description="Empieza de cero (pierdes esta partida)"
+              emoji="🆕"
+              variant="danger"
+              onClick={handleReset}
+            />
           </OptionsSheet>
         </div>
 
@@ -252,36 +279,6 @@ export default function DuoPage() {
           lastMove={lastMove}
           onMove={handleMove}
         />
-      </div>
-
-      {/* Action buttons */}
-      <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-        <ActionButton
-          label="Deshacer"
-          emoji="↩️"
-          icon={<Undo2 size={14} />}
-          onClick={handleUndo}
-          disabled={history.length <= 1}
-        />
-        <ActionButton
-          label="Voltear"
-          emoji="🔄"
-          icon={<FlipHorizontal size={14} />}
-          onClick={() => setOrientation((o) => (o === "w" ? "b" : "w"))}
-        />
-        <ActionButton
-          label="Reiniciar"
-          emoji="🆕"
-          icon={<RotateCcw size={14} />}
-          onClick={handleReset}
-          variant="danger"
-        />
-      </div>
-
-      <div className="w-full max-w-[680px] rounded-2xl bg-white/70 p-3 text-xs sm:text-sm text-[var(--color-wood-dark)]/85 shadow text-center">
-        💡 Las pistas y avisos se pueden apagar para jugar con menos ayuda. El
-        tablero se voltea automáticamente para que cada jugadora vea sus piezas
-        del lado correcto.
       </div>
     </AppShell>
   );
@@ -330,43 +327,3 @@ function TurnChip({
   );
 }
 
-function ActionButton({
-  label,
-  emoji,
-  icon,
-  onClick,
-  disabled = false,
-  variant = "default",
-}: {
-  label: string;
-  emoji: string;
-  icon: React.ReactNode;
-  onClick: () => void;
-  disabled?: boolean;
-  variant?: "default" | "danger";
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-      className={cn(
-        "min-w-[88px] min-h-[72px] flex flex-col items-center justify-center gap-1 rounded-2xl px-3 py-2 font-semibold text-sm",
-        "shadow-[0_4px_0_0_rgba(58,36,23,0.45)] active:translate-y-[3px] active:shadow-[0_1px_0_0_rgba(58,36,23,0.45)]",
-        disabled && "opacity-50 cursor-not-allowed active:translate-y-0",
-        variant === "danger"
-          ? "bg-[var(--color-danger)] text-white"
-          : "bg-white/85 text-[var(--color-wood-dark)]",
-      )}
-    >
-      <span className="text-2xl leading-none" aria-hidden>
-        {emoji}
-      </span>
-      <span className="flex items-center gap-1 text-[13px]">
-        {icon}
-        <span>{label}</span>
-      </span>
-    </button>
-  );
-}

@@ -119,6 +119,64 @@ export function OptionsSheet({
   );
 }
 
+/** Visual divider between sections inside the sheet. */
+export function OptionDivider({ label }: { label?: string }) {
+  return (
+    <div className="flex items-center gap-2 px-1 mt-2">
+      <span className="h-px flex-1 bg-[var(--color-wood-dark)]/15" />
+      {label && (
+        <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-wood-dark)]/50">
+          {label}
+        </span>
+      )}
+      <span className="h-px flex-1 bg-[var(--color-wood-dark)]/15" />
+    </div>
+  );
+}
+
+/** Action button row inside the OptionsSheet (not a toggle — fires once). */
+export function OptionAction({
+  label,
+  description,
+  emoji,
+  onClick,
+  disabled = false,
+  variant = "default",
+}: {
+  label: string;
+  description?: string;
+  emoji?: string;
+  onClick: () => void;
+  disabled?: boolean;
+  variant?: "default" | "danger";
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(
+        "w-full flex items-center gap-3 rounded-2xl px-3 py-3 text-left border-2",
+        "transition-colors active:scale-[0.99]",
+        disabled && "opacity-50 cursor-not-allowed",
+        variant === "danger"
+          ? "border-[var(--color-danger)]/30 bg-[var(--color-danger)]/5 text-[var(--color-danger)]"
+          : "border-[var(--color-wood-dark)]/15 bg-white text-[var(--color-wood-dark)]",
+      )}
+    >
+      {emoji && <span aria-hidden className="text-2xl">{emoji}</span>}
+      <span className="min-w-0 flex-1">
+        <span className="block font-bold text-sm leading-tight">{label}</span>
+        {description && (
+          <span className="block text-[11px] opacity-65 leading-tight mt-0.5">
+            {description}
+          </span>
+        )}
+      </span>
+    </button>
+  );
+}
+
 /** A single toggle row inside the OptionsSheet. */
 export function OptionRow({
   label,
