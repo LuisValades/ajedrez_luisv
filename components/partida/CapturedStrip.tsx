@@ -58,8 +58,8 @@ export function CapturedStrip({ fen }: { fen: string }) {
 
     if (!lost.length) {
       return (
-        <span className="text-[11px] text-[var(--color-wood-dark)]/45 italic">
-          aún no has capturado nada 👀
+        <span className="text-[10px] text-[var(--color-wood-dark)]/40 italic">
+          —
         </span>
       );
     }
@@ -97,19 +97,18 @@ export function CapturedStrip({ fen }: { fen: string }) {
   };
 
   return (
-    <div className="rounded-2xl bg-white/70 px-3 py-2 shadow-[0_3px_0_0_rgba(58,36,23,0.2)]">
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-wood-dark)]/55 shrink-0">
-            Blancas comieron
-          </span>
+    <div className="rounded-2xl bg-white/70 px-2.5 py-1.5 shadow-[0_3px_0_0_rgba(58,36,23,0.2)]">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span aria-hidden className="text-base">⚪</span>
           {renderRow("w")}
         </div>
-        <div className="flex items-center gap-2 justify-end min-w-0">
+        <span aria-hidden className="text-[var(--color-wood-dark)]/30 text-xs font-bold">
+          vs
+        </span>
+        <div className="flex items-center gap-1.5 justify-end min-w-0">
           {renderRow("b")}
-          <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-wood-dark)]/55 shrink-0">
-            Negras
-          </span>
+          <span aria-hidden className="text-base">⚫</span>
         </div>
       </div>
     </div>

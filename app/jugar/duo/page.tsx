@@ -3,12 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import {
-  Eye,
-  EyeOff,
   FlipHorizontal,
-  Lightbulb,
   RotateCcw,
-  ShieldAlert,
   Undo2,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -22,6 +18,7 @@ import { sfx } from "@/lib/audio/sfx";
 import { cn } from "@/lib/utils";
 import { useSettingsStore } from "@/store/settingsStore";
 import { getTheme } from "@/lib/themes";
+import { OptionsSheet, OptionRow } from "@/components/ui/OptionsSheet";
 
 type HistoryEntry = {
   fen: string;
@@ -177,59 +174,70 @@ export default function DuoPage() {
 
   return (
     <AppShell title="Dos Jugadoras" emoji="👫" coachPosition="bottom-right">
-      <div className="w-full max-w-[680px] flex flex-col gap-3">
-        {/* Turn chip — large color circle for the player on move */}
-        <TurnChip
-          turn={turn}
-          statusEmoji={statusEmoji}
-          statusText={statusText}
-          statusColor={statusColor}
-          moves={moveCount}
-        />
+      <div className="w-full max-w-[680px] flex flex-col gap-2">
+        {/* Compact top strip: TurnChip + Ayudas trigger inline */}
+        <div className="flex items-stretch gap-2">
+          <div className="flex-1 min-w-0">
+            <TurnChip
+              turn={turn}
+              statusEmoji={statusEmoji}
+              statusText={statusText}
+              statusColor={statusColor}
+              moves={moveCount}
+            />
+          </div>
+          <OptionsSheet
+            label="Ayudas"
+            title="Ayudas y opciones"
+            activeCount={
+              [showHints, showThreats, showCoordinates, autoFlip, coachOn].filter(
+                Boolean,
+              ).length
+            }
+            className="self-stretch"
+          >
+            <OptionRow
+              label="Pistas"
+              description="Marca casillas legales al tocar pieza"
+              emoji="💡"
+              active={showHints}
+              onClick={() => setShowHints((v) => !v)}
+            />
+            <OptionRow
+              label="Avisos de peligro"
+              description="Resalta piezas amenazadas"
+              emoji="⚠️"
+              active={showThreats}
+              onClick={() => setShowThreats((v) => !v)}
+            />
+            <OptionRow
+              label="Letras y números"
+              description="Coordenadas a–h, 1–8 en el tablero"
+              emoji="🔤"
+              active={showCoordinates}
+              onClick={() => setShowCoordinates((v) => !v)}
+            />
+            <OptionRow
+              label="Voltear automático"
+              description="Gira el tablero al cambiar de turno"
+              emoji="🔁"
+              active={autoFlip}
+              onClick={() => setAutoFlip((v) => !v)}
+            />
+            <OptionRow
+              label="Voz de Drako"
+              description="Habla y celebra tus jugadas"
+              emoji="🐲"
+              active={coachOn}
+              onClick={() => {
+                setCoachOn((v) => !v);
+                if (coachOn) coach.hush();
+              }}
+            />
+          </OptionsSheet>
+        </div>
 
         <CapturedStrip fen={fen} />
-
-        {/* Toggles row — all visual aids */}
-        <div className="flex flex-wrap justify-center gap-2">
-          <Toggle
-            label="Pistas"
-            emoji="💡"
-            icon={<Lightbulb size={14} />}
-            active={showHints}
-            onClick={() => setShowHints((v) => !v)}
-          />
-          <Toggle
-            label="Avisos"
-            emoji="⚠️"
-            icon={<ShieldAlert size={14} />}
-            active={showThreats}
-            onClick={() => setShowThreats((v) => !v)}
-          />
-          <Toggle
-            label="Letras"
-            emoji="🔤"
-            icon={showCoordinates ? <Eye size={14} /> : <EyeOff size={14} />}
-            active={showCoordinates}
-            onClick={() => setShowCoordinates((v) => !v)}
-          />
-          <Toggle
-            label="Voltear auto"
-            emoji="🔁"
-            icon={<FlipHorizontal size={14} />}
-            active={autoFlip}
-            onClick={() => setAutoFlip((v) => !v)}
-          />
-          <Toggle
-            label="Voz Drako"
-            emoji="🐲"
-            icon={<span className="text-[14px]">🗣️</span>}
-            active={coachOn}
-            onClick={() => {
-              setCoachOn((v) => !v);
-              if (coachOn) coach.hush();
-            }}
-          />
-        </div>
       </div>
 
       {/* Board */}
@@ -296,68 +304,29 @@ function TurnChip({
   const theme = getTheme(themeId);
   const sidePalette = turn === "w" ? theme.player1 : theme.player2;
   return (
-    <div className="rounded-2xl bg-white/90 px-3 py-2 shadow-[0_4px_0_0_rgba(58,36,23,0.25)] flex items-center justify-between gap-3">
-      <div className="flex items-center gap-2.5 min-w-0">
-        <motion.span
-          key={turn}
-          aria-hidden
-          initial={{ scale: 0.85 }}
-          animate={{ scale: [0.85, 1.08, 1] }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-[3px] shadow-inner"
-          style={{
-            background: sidePalette.fill,
-            borderColor: sidePalette.stroke,
-          }}
-        />
-        <div className="min-w-0">
-          <p className={cn("font-bold text-sm sm:text-base leading-tight", statusColor)}>
-            <span aria-hidden className="mr-1">{statusEmoji}</span>
-            {statusText}
-          </p>
-          <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-[var(--color-wood-dark)]/55">
-            Jugadas: {moves}
-          </p>
-        </div>
+    <div className="h-full rounded-2xl bg-white/90 px-3 py-2 shadow-[0_4px_0_0_rgba(58,36,23,0.25)] flex items-center gap-2.5 min-w-0">
+      <motion.span
+        key={turn}
+        aria-hidden
+        initial={{ scale: 0.85 }}
+        animate={{ scale: [0.85, 1.08, 1] }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="inline-flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full border-[3px] shadow-inner"
+        style={{
+          background: sidePalette.fill,
+          borderColor: sidePalette.stroke,
+        }}
+      />
+      <div className="min-w-0 flex-1">
+        <p className={cn("font-bold text-[13px] sm:text-base leading-tight truncate", statusColor)}>
+          <span aria-hidden className="mr-1">{statusEmoji}</span>
+          {statusText}
+        </p>
+        <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-wood-dark)]/55">
+          {moves} {moves === 1 ? "jugada" : "jugadas"}
+        </p>
       </div>
     </div>
-  );
-}
-
-function Toggle({
-  label,
-  emoji,
-  icon,
-  active,
-  onClick,
-}: {
-  label: string;
-  emoji: string;
-  icon: React.ReactNode;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={cn(
-        "min-h-[56px] min-w-[80px] flex flex-col items-center justify-center gap-0.5 rounded-2xl px-3 py-1.5 font-semibold text-xs",
-        "shadow-[0_3px_0_0_rgba(58,36,23,0.35)] active:translate-y-[2px] active:shadow-[0_1px_0_0_rgba(58,36,23,0.35)]",
-        active
-          ? "bg-[var(--color-gold)] text-[var(--color-wood-dark)]"
-          : "bg-white/80 text-[var(--color-wood-dark)]/55 border border-[var(--color-wood-dark)]/10",
-      )}
-    >
-      <span className="text-xl leading-none" aria-hidden>
-        {emoji}
-      </span>
-      <span className="flex items-center gap-1 text-[11px]">
-        {icon}
-        <span>{label}</span>
-      </span>
-    </button>
   );
 }
 

@@ -23,13 +23,12 @@ export function CartoonPiece({
   themeId: ThemeId;
 }) {
   const src = `/pieces/${themeId}/${piece.color}/${piece.type}.png`;
-  // Three small white drop-shadows stacked = a tight glow halo (~1.5px).
-  // Plus one dark drop-shadow underneath for grounding.
+  // Soft, short white halo (single drop-shadow) so the piece pops on either
+  // light or dark squares without looking like a sticker. Dark grounding
+  // shadow stays underneath for depth.
   const filter =
-    "drop-shadow(0 0 1px rgba(255,255,255,0.95))" +
-    " drop-shadow(0 0 1.5px rgba(255,255,255,0.85))" +
-    " drop-shadow(0 0 2px rgba(255,255,255,0.6))" +
-    " drop-shadow(0 2px 2.5px rgba(0,0,0,0.45))";
+    "drop-shadow(0 0 1.2px rgba(255,255,255,0.7))" +
+    " drop-shadow(0 2px 2.5px rgba(0,0,0,0.4))";
 
   return (
     <div

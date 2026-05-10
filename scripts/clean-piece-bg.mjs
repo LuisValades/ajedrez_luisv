@@ -7,20 +7,35 @@
  * Tolerance is generous so anti-aliased edges fade smoothly.
  */
 import sharp from "sharp";
-import { readdir, rename, unlink } from "node:fs/promises";
+import { readdir, rename, unlink, stat } from "node:fs/promises";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PIECES_DIR = join(__dirname, "..", "public", "pieces");
 
+/** Recursively gather every .png file under a directory. */
+async function walkPngs(dir, acc = []) {
+  const entries = await readdir(dir);
+  for (const name of entries) {
+    const full = join(dir, name);
+    const s = await stat(full);
+    if (s.isDirectory()) {
+      await walkPngs(full, acc);
+    } else if (name.endsWith(".png")) {
+      acc.push(full);
+    }
+  }
+  return acc;
+}
+
 // Generous euclidean distance threshold in RGB (0..441). A bit looser than
 // strict equal because edges have anti-alias halo.
 const HARD_THRESHOLD = 18;
 const SOFT_THRESHOLD = 60;
 
-async function processFile(file) {
-  const path = join(PIECES_DIR, file);
+async function processFile(path) {
+  const file = path.replace(PIECES_DIR + "\\", "").replace(PIECES_DIR + "/", "");
   const img = sharp(path).ensureAlpha();
   const meta = await img.metadata();
   const { width, height } = meta;
@@ -109,8 +124,8 @@ async function processFile(file) {
 }
 
 async function main() {
-  const files = (await readdir(PIECES_DIR)).filter((f) => f.endsWith(".png"));
-  console.log(`Cleaning ${files.length} PNG files in ${PIECES_DIR}\n`);
+  const files = await walkPngs(PIECES_DIR);
+  console.log(`Cleaning ${files.length} PNG files under ${PIECES_DIR}\n`);
   for (const f of files) {
     try {
       await processFile(f);
