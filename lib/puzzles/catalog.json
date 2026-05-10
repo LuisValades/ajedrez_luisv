@@ -1,0 +1,272 @@
+[
+  {
+    "id": "p001",
+    "tema": "mate-en-1",
+    "titulo": "Mate de la Torre",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/R5K1 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Ra8#"],
+    "pista_voz": "Mira tu Torre. Súbela hasta arriba para atrapar al rey por la fila."
+  },
+  {
+    "id": "p002",
+    "tema": "mate-en-1",
+    "titulo": "Mate de la Reina",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/3Q2K1 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Qd8#"],
+    "pista_voz": "Tu Reina puede llegar hasta la octava fila. ¡Atrapa al rey!"
+  },
+  {
+    "id": "p003",
+    "tema": "mate-en-1",
+    "titulo": "El Rey acorralado",
+    "fen": "7k/5ppp/8/8/8/8/5PPP/4Q1K1 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Qe8#"],
+    "pista_voz": "Tu Reina baja a la octava fila para dar mate. ¡El rey no escapa!"
+  },
+  {
+    "id": "p004",
+    "tema": "mate-en-1",
+    "titulo": "Mate con dos torres",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/R1R3K1 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Ra8#"],
+    "pista_voz": "Una torre tuya puede subir y dar mate por la fila 8."
+  },
+  {
+    "id": "p005",
+    "tema": "mate-en-1",
+    "titulo": "Reina y Rey",
+    "fen": "7k/8/6KQ/8/8/8/8/8 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Qh7#"],
+    "pista_voz": "Acerca tu Reina al rey rival. ¡Tu Rey la protege!"
+  },
+  {
+    "id": "p006",
+    "tema": "mate-en-1",
+    "titulo": "Mate al rey en la esquina",
+    "fen": "7k/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Rd8#"],
+    "pista_voz": "Sube tu Torre a la fila 8 para atrapar al rey en la esquina."
+  },
+  {
+    "id": "p007",
+    "tema": "mate-en-1",
+    "titulo": "Mate del pasillo",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/2R3K1 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Rc8#"],
+    "pista_voz": "Tu Torre sube a la octava fila. El rey rival no tiene escape."
+  },
+  {
+    "id": "p008",
+    "tema": "mate-en-1",
+    "titulo": "Cerca pero seguro",
+    "fen": "k7/8/KQ6/8/8/8/8/8 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Qb7#"],
+    "pista_voz": "Tu Reina llega cerca del rey rival, pero tu Rey la cuida."
+  },
+  {
+    "id": "p009",
+    "tema": "mate-en-1",
+    "titulo": "Reina por la columna",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/2Q3K1 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Qc8#"],
+    "pista_voz": "Tu Reina sube por la columna c hasta dar mate."
+  },
+  {
+    "id": "p010",
+    "tema": "mate-en-1",
+    "titulo": "La segunda torre da mate",
+    "fen": "6k1/5ppp/8/8/8/8/5PPP/R3R1K1 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Re8#"],
+    "pista_voz": "Sube tu Torre cercana a la columna e, y cae el mate."
+  },
+  {
+    "id": "p011",
+    "tema": "captura",
+    "titulo": "Reina sin defensa",
+    "fen": "rnbqkbnr/ppp2ppp/8/3pp3/3PP3/8/PPP1QPPP/RNB1KBNR w KQkq - 0 1",
+    "lado": "blancas",
+    "solucion": ["exd5"],
+    "pista_voz": "Hay un peón rival que puedes comer con tu peón."
+  },
+  {
+    "id": "p012",
+    "tema": "captura",
+    "titulo": "El caballo se descuida",
+    "fen": "r1bqkbnr/pppp1ppp/8/4p3/4n3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1",
+    "lado": "blancas",
+    "solucion": ["d3"],
+    "pista_voz": "Mueve un peón para atacar al caballo rival."
+  },
+  {
+    "id": "p013",
+    "tema": "captura",
+    "titulo": "Captura central",
+    "fen": "rnbqkbnr/pp1ppppp/8/2p5/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2",
+    "lado": "blancas",
+    "solucion": ["dxc5"],
+    "pista_voz": "Tu peón en d4 puede comer al peón rival en c5."
+  },
+  {
+    "id": "p014",
+    "tema": "captura",
+    "titulo": "Comer el alfil suelto",
+    "fen": "rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+    "lado": "blancas",
+    "solucion": ["exd5"],
+    "pista_voz": "Hay un peón rival sin defender. ¡Cómelo con tu peón!"
+  },
+  {
+    "id": "p015",
+    "tema": "captura",
+    "titulo": "Comer la torre",
+    "fen": "4k3/8/8/8/8/4r3/8/4Q1K1 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Qxe3+"],
+    "pista_voz": "Tu Reina puede comer la torre rival. ¡Encima das jaque!"
+  },
+  {
+    "id": "p016",
+    "tema": "captura",
+    "titulo": "Captura libre",
+    "fen": "4k3/8/4n3/8/8/8/4Q3/4K3 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Qxe6+"],
+    "pista_voz": "Hay un caballo solito a tu alcance. Tu Reina lo come y da jaque."
+  },
+  {
+    "id": "p017",
+    "tema": "captura",
+    "titulo": "Reina come reina",
+    "fen": "4k3/8/8/4q3/8/4Q3/8/4K3 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Qxe5+"],
+    "pista_voz": "Las dos reinas se miran. ¡Cómete a la rival con jaque!"
+  },
+  {
+    "id": "p018",
+    "tema": "defiende-rey",
+    "titulo": "Sal del jaque",
+    "fen": "4k3/8/8/8/8/8/r7/4K3 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Kf1"],
+    "pista_voz": "Tu Rey está en jaque. Muévelo a una casilla segura."
+  },
+  {
+    "id": "p019",
+    "tema": "defiende-rey",
+    "titulo": "Cubre con la torre",
+    "fen": "3k4/8/8/8/8/r7/3R4/4K3 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Ra2"],
+    "pista_voz": "Pon tu Torre entre el rey y la torre rival."
+  },
+  {
+    "id": "p020",
+    "tema": "defiende-rey",
+    "titulo": "Come al atacante",
+    "fen": "4k3/8/8/8/8/8/4q3/4K3 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Kxe2"],
+    "pista_voz": "Tu Rey puede comerse a la reina rival. ¡Adelante!"
+  },
+  {
+    "id": "p021",
+    "tema": "defiende-rey",
+    "titulo": "Come la torre vecina",
+    "fen": "4k3/8/8/8/8/8/8/4Kr2 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Kxf1"],
+    "pista_voz": "Tu Rey está en jaque y puede comer a la torre vecina."
+  },
+  {
+    "id": "p022",
+    "tema": "defiende-rey",
+    "titulo": "Escapa lateral",
+    "fen": "4k3/8/8/8/8/8/8/3rK3 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Kxd1"],
+    "pista_voz": "Cómete a la torre con tu Rey, está sin defender."
+  },
+  {
+    "id": "p023",
+    "tema": "promociona-peon",
+    "titulo": "El peón viaja a Reina",
+    "fen": "8/4P3/8/8/8/8/8/4K2k w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["e8=Q+"],
+    "pista_voz": "Tu peón está en la séptima. ¡Promuévelo a Reina!"
+  },
+  {
+    "id": "p024",
+    "tema": "promociona-peon",
+    "titulo": "Promoción mágica",
+    "fen": "8/3P4/8/8/8/8/8/4K2k w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["d8=Q"],
+    "pista_voz": "Tu peón llega a la fila 8 y se transforma en Reina."
+  },
+  {
+    "id": "p025",
+    "tema": "promociona-peon",
+    "titulo": "Peón en la octava",
+    "fen": "8/P7/8/8/8/8/8/4K2k w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["a8=Q"],
+    "pista_voz": "Tu peón a la corona. ¡Hazlo Reina!"
+  },
+  {
+    "id": "p026",
+    "tema": "promociona-peon",
+    "titulo": "Promueve y da jaque",
+    "fen": "4k3/3P4/8/8/8/8/8/4K3 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["d8=Q+"],
+    "pista_voz": "Promueve a Reina y das jaque al rey rival."
+  },
+  {
+    "id": "p027",
+    "tema": "promociona-peon",
+    "titulo": "Mate al promover",
+    "fen": "5k2/4P3/5K2/8/8/8/8/8 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["e8=Q+"],
+    "pista_voz": "Promueve a Reina. ¡El rey rival está acorralado!"
+  },
+  {
+    "id": "p028",
+    "tema": "captura",
+    "titulo": "Caballo desprotegido",
+    "fen": "4k3/8/2n5/8/8/8/2R5/4K3 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Rxc6"],
+    "pista_voz": "El caballo rival no tiene quién lo defienda. ¡Cómelo con tu Torre!"
+  },
+  {
+    "id": "p029",
+    "tema": "mate-en-1",
+    "titulo": "Mate en la esquina",
+    "fen": "k7/8/1K6/8/8/8/8/7R w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Rh8#"],
+    "pista_voz": "Sube tu Torre hasta la fila 8 para encerrar al rey."
+  },
+  {
+    "id": "p030",
+    "tema": "mate-en-1",
+    "titulo": "Reina al corazón",
+    "fen": "5k2/8/5K2/8/8/8/8/3Q4 w - - 0 1",
+    "lado": "blancas",
+    "solucion": ["Qd8#"],
+    "pista_voz": "Tu Reina llega a la fila 8 y da jaque mate."
+  }
+]
