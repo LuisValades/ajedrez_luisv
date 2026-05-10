@@ -46,15 +46,10 @@ export function CartoonPiece({ piece, size = 64, theme }: Props) {
   const src = FILE[piece.type];
   const isWhite = piece.color === "w";
   const tint = isWhite ? theme.whiteTint : theme.blackTint;
-  const sourceBrightness = isWhite
-    ? (theme.whiteDarkness ?? 1)
-    : (theme.blackDarkness ?? 1);
-  const outlineColor = isWhite
-    ? "rgba(30,58,138,0.55)"
-    : "rgba(0,0,0,0.65)";
+  const detailOpacity = isWhite ? 0.55 : 0.4;
   const dropShadow = isWhite
-    ? `drop-shadow(0 0 0.6px ${outlineColor}) drop-shadow(0 0 0.6px ${outlineColor}) drop-shadow(0 2px 3px rgba(30,58,138,0.35))`
-    : `drop-shadow(0 2px 3px rgba(0,0,0,0.55))`;
+    ? "drop-shadow(0 1px 0 rgba(30,58,138,0.6)) drop-shadow(0 2px 3px rgba(30,58,138,0.35))"
+    : "drop-shadow(0 2px 3px rgba(0,0,0,0.55))";
 
   return (
     <div
@@ -67,22 +62,7 @@ export function CartoonPiece({ piece, size = 64, theme }: Props) {
       }}
       aria-hidden
     >
-      {/* base image — original 3D rendering */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt=""
-        draggable={false}
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "contain",
-          filter: `brightness(${sourceBrightness})`,
-        }}
-      />
-      {/* tint overlay restricted to the piece silhouette */}
+      {/* solid silhouette — guarantees the body color */}
       <div
         style={{
           position: "absolute",
@@ -96,8 +76,23 @@ export function CartoonPiece({ piece, size = 64, theme }: Props) {
           maskRepeat: "no-repeat",
           WebkitMaskPosition: "center",
           maskPosition: "center",
-          mixBlendMode: isWhite ? "multiply" : "color",
-          opacity: isWhite ? 1 : 0.9,
+          pointerEvents: "none",
+        }}
+      />
+      {/* original image overlay — multiplies kawaii face/details over the solid body */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt=""
+        draggable={false}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "contain",
+          mixBlendMode: "multiply",
+          opacity: detailOpacity,
           pointerEvents: "none",
         }}
       />

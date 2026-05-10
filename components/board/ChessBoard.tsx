@@ -344,9 +344,9 @@ export function ChessBoard({
                     }}
                     transition={{
                       type: "spring",
-                      stiffness: 180,
-                      damping: 24,
-                      mass: 0.9,
+                      stiffness: 280,
+                      damping: 26,
+                      mass: 0.55,
                     }}
                     style={{
                       position: "absolute",

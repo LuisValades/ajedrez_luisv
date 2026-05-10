@@ -46,6 +46,24 @@ export default function RootLayout({
       lang="es-MX"
       className={`${fredoka.variable} h-full antialiased`}
     >
+      <head>
+        {/* Pre-warm Stockfish so /jugar starts instantly */}
+        <link rel="preload" href="/stockfish/stockfish.js" as="worker" />
+        <link
+          rel="preload"
+          href="/stockfish/stockfish.wasm"
+          as="fetch"
+          type="application/wasm"
+          crossOrigin="anonymous"
+        />
+        {/* Pre-warm cartoon piece PNGs (used by Niños/Niñas skins) */}
+        <link rel="preload" href="/pieces/peon.png" as="image" />
+        <link rel="preload" href="/pieces/torre.png" as="image" />
+        <link rel="preload" href="/pieces/caballo.png" as="image" />
+        <link rel="preload" href="/pieces/alfil.png" as="image" />
+        <link rel="preload" href="/pieces/reina.png" as="image" />
+        <link rel="preload" href="/pieces/rey.png" as="image" />
+      </head>
       <body className="min-h-full flex flex-col">
         <Providers>{children}</Providers>
       </body>

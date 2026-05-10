@@ -13,6 +13,29 @@ import { useProgressStore } from "@/store/progressStore";
 import { getAvatar } from "@/lib/avatars";
 import { cn } from "@/lib/utils";
 
+let stockfishWarmed = false;
+function warmStockfish() {
+  if (stockfishWarmed) return;
+  stockfishWarmed = true;
+  // Lazy-import so home bundle stays small; browser fetches the chunk + worker file in idle.
+  import("@/lib/stockfish/StockfishEngine")
+    .then((mod) => mod.getStockfish().init())
+    .catch(() => {
+      stockfishWarmed = false;
+    });
+}
+
+function warmVoices() {
+  if (typeof window === "undefined") return;
+  if (!("speechSynthesis" in window)) return;
+  // Touching getVoices() triggers async voice load on Chrome/Edge.
+  try {
+    window.speechSynthesis.getVoices();
+  } catch {
+    /* ignore */
+  }
+}
+
 const HOVER_LINES: Record<string, string> = {
   aprender:
     "Aprender — aquí Drako te enseña cómo se mueve cada pieza, paso a pasito.",
@@ -38,6 +61,7 @@ export default function HomePage() {
   useEffect(() => {
     if (greetedRef.current) return;
     greetedRef.current = true;
+    warmVoices();
     coach.say({
       text: "¡Hola! Soy Drako, tu dragón amigo. ¿Qué quieres hacer hoy?",
       durationMs: 6000,
@@ -47,12 +71,17 @@ export default function HomePage() {
 
   const onHover = (key: keyof typeof HOVER_LINES) => {
     coach.say({ text: HOVER_LINES[key], durationMs: 4500, silent: !audioUnlocked });
+    if (key === "partida") warmStockfish();
   };
 
   return (
     <main
       className="min-h-dvh flex flex-col items-center px-3 pt-4 pb-6 sm:pt-6 gap-5"
-      onPointerDown={unlockAudio}
+      onPointerDown={() => {
+        unlockAudio();
+        warmVoices();
+        warmStockfish();
+      }}
     >
       <header className="w-full max-w-[860px] flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
