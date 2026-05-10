@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CoachOverlay } from "@/components/coach/CoachOverlay";
 import { useCoach } from "@/components/coach/CoachContext";
 import { SkinQuickPicker } from "@/components/board/SkinQuickPicker";
+import { PieceLegendButton } from "@/components/board/PieceLegend";
 import { HomeMenuCard } from "@/components/layout/HomeMenuCard";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useProgressStore } from "@/store/progressStore";
@@ -72,6 +73,7 @@ export default function HomePage() {
         </div>
 
         <div className="flex items-center gap-2">
+          <PieceLegendButton />
           <SkinQuickPicker />
           <button
             type="button"

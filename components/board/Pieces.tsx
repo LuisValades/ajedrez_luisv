@@ -4,9 +4,7 @@ import type { Piece } from "@/lib/chessEngine";
 import { useSettingsStore } from "@/store/settingsStore";
 import type { PieceSetId } from "@/lib/pieceSets";
 import { WoodPiece } from "./skins/Wood";
-import { KidsPiece } from "./skins/Kids";
-import { PrincessPiece } from "./skins/Princess";
-import { FairyPiece } from "./skins/Fairy";
+import { KidsBluePiece, PrincessPinkPiece } from "./skins/Cartoon";
 
 export const PIECE_NAMES_ES: Record<Piece["type"], string> = {
   p: "peón",
@@ -31,11 +29,9 @@ export function PieceSvg({ piece, size = 64, pieceSet }: PieceSvgProps) {
     case "wood":
       return <WoodPiece piece={piece} size={size} />;
     case "kids":
-      return <KidsPiece piece={piece} size={size} />;
+      return <KidsBluePiece piece={piece} size={size} />;
     case "princess":
-      return <PrincessPiece piece={piece} size={size} />;
-    case "fairy":
-      return <FairyPiece piece={piece} size={size} />;
+      return <PrincessPinkPiece piece={piece} size={size} />;
     default:
       return <WoodPiece piece={piece} size={size} />;
   }

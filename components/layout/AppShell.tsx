@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowLeft, Volume2, VolumeX } from "lucide-react";
 import { CoachOverlay } from "@/components/coach/CoachOverlay";
 import { SkinQuickPicker } from "@/components/board/SkinQuickPicker";
+import { PieceLegendButton } from "@/components/board/PieceLegend";
 import { useSettingsStore } from "@/store/settingsStore";
 import { cn } from "@/lib/utils";
 
@@ -54,6 +55,7 @@ export function AppShell({
         </h1>
 
         <div className="flex items-center gap-2">
+          <PieceLegendButton />
           <SkinQuickPicker />
           <button
             type="button"
